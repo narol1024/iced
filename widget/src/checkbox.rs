@@ -306,6 +306,7 @@ where
                             align_y: alignment::Vertical::Top,
                             shaping: self.text_shaping,
                             wrapping: self.text_wrapping,
+                            ellipsis: text::Ellipsis::default(),
                         },
                     )
                 } else {
@@ -431,6 +432,7 @@ where
                         align_y: alignment::Vertical::Center,
                         shaping: *shaping,
                         wrapping: text::Wrapping::default(),
+                        ellipsis: text::Ellipsis::default(),
                     },
                     bounds.center(),
                     style.icon_color,

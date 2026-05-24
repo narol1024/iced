@@ -1,7 +1,7 @@
 //! Draw paragraphs.
 use crate::alignment;
 use crate::text::{
-    Alignment, Difference, Hit, LineHeight, Shaping, Span, Text, Wrapping,
+    Alignment, Difference, Ellipsis, Hit, LineHeight, Shaping, Span, Text, Wrapping,
 };
 use crate::{Pixels, Point, Rectangle, Size};
 
@@ -42,6 +42,9 @@ pub trait Paragraph: Sized + Default {
 
     /// Returns the [`Wrapping`] strategy of the [`Paragraph`]>
     fn wrapping(&self) -> Wrapping;
+
+    /// Returns the [`Ellipsis`] strategy of the [`Paragraph`]>
+    fn ellipsis(&self) -> Ellipsis;
 
     /// Returns the [`Shaping`] strategy of the [`Paragraph`]>
     fn shaping(&self) -> Shaping;
@@ -169,6 +172,7 @@ impl<P: Paragraph> Plain<P> {
             align_y: self.raw.align_y(),
             shaping: self.raw.shaping(),
             wrapping: self.raw.wrapping(),
+            ellipsis: self.raw.ellipsis(),
         }
     }
 }

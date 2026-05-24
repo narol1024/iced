@@ -190,8 +190,8 @@ bitflags = "2.0"
 bytemuck = { version = "1.0", features = ["derive"] }
 bytes = "1.6"
 cargo-hot = { version = "0.1", package = "cargo-hot-protocol" }
-cosmic-text = "0.15"
-cryoglyph = "0.1"
+cosmic-text = "0.18.0"
+cryoglyph = { path = "cryoglyph" }
 futures = { version = "0.3", default-features = false, features = ["std", "async-await"] }
 glam = "0.25"
 guillotiere = "0.6"

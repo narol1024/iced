@@ -1001,6 +1001,7 @@ where
                         align_y: alignment::Vertical::Top,
                         shaping: text::Shaping::Advanced,
                         wrapping: self.wrapping,
+                        ellipsis: text::Ellipsis::default(),
                     },
                     text_bounds.position(),
                     style.placeholder,

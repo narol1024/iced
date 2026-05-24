@@ -44,6 +44,9 @@ pub struct Text<Content = String, Font = crate::Font> {
 
     /// The [`Wrapping`] strategy of the [`Text`].
     pub wrapping: Wrapping,
+
+    /// The [`Ellipsis`] strategy of the [`Text`].
+    pub ellipsis: Ellipsis,
 }
 
 impl<Content, Font> Text<Content, Font>
@@ -63,6 +66,7 @@ where
             align_y: self.align_y,
             shaping: self.shaping,
             wrapping: self.wrapping,
+            ellipsis: self.ellipsis,
         }
     }
 }
@@ -174,6 +178,20 @@ impl Default for Shaping {
             Self::Auto
         }
     }
+}
+
+/// The ellipsis strategy of some text.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
+pub enum Ellipsis {
+    /// No ellipsis.
+    #[default]
+    None,
+    /// Ellipsis at the start of the text.
+    Start,
+    /// Ellipsis in the middle of the text.
+    Middle,
+    /// Ellipsis at the end of the text.
+    End,
 }
 
 /// The wrapping strategy of some text.

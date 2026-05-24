@@ -4,7 +4,7 @@ use crate::core::mouse;
 use crate::core::renderer;
 use crate::core::text::{Paragraph, Span};
 use crate::core::widget::text::{
-    self, Alignment, Catalog, LineHeight, Shaping, Style, StyleFn, Wrapping,
+    self, Alignment, Catalog, Ellipsis, LineHeight, Shaping, Style, StyleFn, Wrapping,
 };
 use crate::core::widget::tree::{self, Tree};
 use crate::core::{
@@ -33,6 +33,7 @@ pub struct Rich<
     align_x: Alignment,
     align_y: alignment::Vertical,
     wrapping: Wrapping,
+    ellipsis: Ellipsis,
     class: Theme::Class<'a>,
     hovered_link: Option<usize>,
     on_link_click: Option<Box<dyn Fn(Link) -> Message + 'a>>,
@@ -58,6 +59,7 @@ where
             align_x: Alignment::Default,
             align_y: alignment::Vertical::Top,
             wrapping: Wrapping::default(),
+            ellipsis: Ellipsis::default(),
             class: Theme::default(),
             hovered_link: None,
             on_link_click: None,
@@ -128,6 +130,12 @@ where
     /// Sets the [`Wrapping`] strategy of the [`Rich`] text.
     pub fn wrapping(mut self, wrapping: Wrapping) -> Self {
         self.wrapping = wrapping;
+        self
+    }
+
+    /// Sets the [`Ellipsis`] strategy of the [`Rich`] text.
+    pub fn ellipsis(mut self, ellipsis: impl Into<Ellipsis>) -> Self {
+        self.ellipsis = ellipsis.into();
         self
     }
 
@@ -247,6 +255,7 @@ where
             self.align_x,
             self.align_y,
             self.wrapping,
+            self.ellipsis,
         )
     }
 
@@ -476,6 +485,7 @@ fn layout<Link, Renderer>(
     align_x: Alignment,
     align_y: alignment::Vertical,
     wrapping: Wrapping,
+    ellipsis: Ellipsis,
 ) -> layout::Node
 where
     Link: Clone,
@@ -497,6 +507,7 @@ where
             align_y,
             shaping: Shaping::Advanced,
             wrapping,
+            ellipsis,
         };
 
         if state.spans != spans {
@@ -514,6 +525,7 @@ where
                 align_y,
                 shaping: Shaping::Advanced,
                 wrapping,
+                ellipsis,
             }) {
                 core::text::Difference::None => {}
                 core::text::Difference::Bounds => {

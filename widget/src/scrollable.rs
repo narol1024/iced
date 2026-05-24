@@ -1486,6 +1486,7 @@ where
                 align_y: alignment::Vertical::Center,
                 shaping: text::Shaping::Basic,
                 wrapping: text::Wrapping::None,
+                ellipsis: text::Ellipsis::default(),
             };
 
             if self.vertical {

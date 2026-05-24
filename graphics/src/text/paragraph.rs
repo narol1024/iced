@@ -2,7 +2,7 @@
 use crate::core;
 use crate::core::alignment;
 use crate::core::text::{
-    Alignment, Hit, LineHeight, Shaping, Span, Text, Wrapping,
+    Alignment, Ellipsis, Hit, LineHeight, Shaping, Span, Text, Wrapping,
 };
 use crate::core::{Font, Pixels, Point, Rectangle, Size};
 use crate::text;
@@ -20,6 +20,7 @@ struct Internal {
     font: Font,
     shaping: Shaping,
     wrapping: Wrapping,
+    ellipsis: Ellipsis,
     align_x: Alignment,
     align_y: alignment::Vertical,
     bounds: Size,
@@ -84,6 +85,11 @@ impl core::text::Paragraph for Paragraph {
 
         buffer.set_wrap(font_system.raw(), text::to_wrap(text.wrapping));
 
+        buffer.set_ellipsize(
+            font_system.raw(),
+            text::to_ellipsize(text.ellipsis, text.bounds.height),
+        );
+
         buffer.set_text(
             font_system.raw(),
             text.content,
@@ -102,6 +108,7 @@ impl core::text::Paragraph for Paragraph {
             align_y: text.align_y,
             shaping: text.shaping,
             wrapping: text.wrapping,
+            ellipsis: text.ellipsis,
             bounds: text.bounds,
             min_bounds,
             version: font_system.version(),
@@ -129,6 +136,11 @@ impl core::text::Paragraph for Paragraph {
         );
 
         buffer.set_wrap(font_system.raw(), text::to_wrap(text.wrapping));
+
+        buffer.set_ellipsize(
+            font_system.raw(),
+            text::to_ellipsize(text.ellipsis, text.bounds.height),
+        );
 
         buffer.set_rich_text(
             font_system.raw(),
@@ -173,6 +185,7 @@ impl core::text::Paragraph for Paragraph {
             align_y: text.align_y,
             shaping: text.shaping,
             wrapping: text.wrapping,
+            ellipsis: text.ellipsis,
             bounds: text.bounds,
             min_bounds,
             version: font_system.version(),
@@ -212,6 +225,7 @@ impl core::text::Paragraph for Paragraph {
             || paragraph.font != text.font
             || paragraph.shaping != text.shaping
             || paragraph.wrapping != text.wrapping
+            || paragraph.ellipsis != text.ellipsis
             || paragraph.align_x != text.align_x
             || paragraph.align_y != text.align_y
         {
@@ -245,6 +259,10 @@ impl core::text::Paragraph for Paragraph {
 
     fn wrapping(&self) -> Wrapping {
         self.0.wrapping
+    }
+
+    fn ellipsis(&self) -> Ellipsis {
+        self.0.ellipsis
     }
 
     fn shaping(&self) -> Shaping {
@@ -434,6 +452,7 @@ impl Default for Internal {
             font: Font::default(),
             shaping: Shaping::default(),
             wrapping: Wrapping::default(),
+            ellipsis: Ellipsis::default(),
             align_x: Alignment::Default,
             align_y: alignment::Vertical::Top,
             bounds: Size::ZERO,

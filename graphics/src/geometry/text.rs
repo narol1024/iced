@@ -56,6 +56,7 @@ impl Text {
             align_y: self.align_y,
             shaping: self.shaping,
             wrapping: Wrapping::default(),
+            ellipsis: core::text::Ellipsis::default(),
         });
 
         let translation_x = match self.align_x {
