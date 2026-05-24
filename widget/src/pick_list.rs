@@ -382,6 +382,7 @@ where
             align_y: alignment::Vertical::Center,
             shaping: self.text_shaping,
             wrapping: text::Wrapping::default(),
+            ellipsis: text::Ellipsis::default(),
         };
 
         for (option, paragraph) in options.iter().zip(state.options.iter_mut())
@@ -650,6 +651,7 @@ where
                     align_y: alignment::Vertical::Center,
                     shaping,
                     wrapping: text::Wrapping::default(),
+                    ellipsis: text::Ellipsis::default(),
                 },
                 Point::new(
                     bounds.x + bounds.width - self.padding.right,
@@ -680,6 +682,7 @@ where
                     align_y: alignment::Vertical::Center,
                     shaping: self.text_shaping,
                     wrapping: text::Wrapping::default(),
+                    ellipsis: text::Ellipsis::default(),
                 },
                 Point::new(bounds.x + self.padding.left, bounds.center_y()),
                 if selected.is_some() {

@@ -44,6 +44,9 @@ pub struct Text<Content = String, Font = crate::Font> {
 
     /// The [`Wrapping`] strategy of the [`Text`].
     pub wrapping: Wrapping,
+
+    /// The [`Ellipsis`] strategy of the [`Text`].
+    pub ellipsis: Ellipsis,
 }
 
 impl<Content, Font> Text<Content, Font>
@@ -63,6 +66,7 @@ where
             align_y: self.align_y,
             shaping: self.shaping,
             wrapping: self.wrapping,
+            ellipsis: self.ellipsis,
         }
     }
 }
@@ -190,6 +194,20 @@ pub enum Wrapping {
     Glyph,
     /// Wraps at the word level, or fallback to glyph level if a word can't fit on a line by itself.
     WordOrGlyph,
+}
+
+/// The ellipsis strategy of some text.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
+pub enum Ellipsis {
+    /// No ellipsis.
+    #[default]
+    None,
+    /// Ellipsis at the start.
+    Start,
+    /// Ellipsis in the middle.
+    Middle,
+    /// Ellipsis at the end.
+    End,
 }
 
 /// The height of a line of text in a paragraph.

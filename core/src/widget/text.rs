@@ -31,7 +31,7 @@ use crate::{
     Color, Element, Layout, Length, Pixels, Rectangle, Size, Theme, Widget,
 };
 
-pub use text::{Alignment, LineHeight, Shaping, Wrapping};
+pub use text::{Alignment, Ellipsis, LineHeight, Shaping, Wrapping};
 
 /// A bunch of text.
 ///
@@ -152,6 +152,12 @@ where
     /// Sets the [`Wrapping`] strategy of the [`Text`].
     pub fn wrapping(mut self, wrapping: Wrapping) -> Self {
         self.format.wrapping = wrapping;
+        self
+    }
+
+    /// Sets the [`Ellipsis`] strategy of the [`Text`].
+    pub fn ellipsis(mut self, ellipsis: Ellipsis) -> Self {
+        self.format.ellipsis = ellipsis;
         self
     }
 
@@ -281,6 +287,7 @@ pub struct Format<Font> {
     pub align_y: alignment::Vertical,
     pub shaping: Shaping,
     pub wrapping: Wrapping,
+    pub ellipsis: text::Ellipsis,
 }
 
 impl<Font> Default for Format<Font> {
@@ -295,6 +302,7 @@ impl<Font> Default for Format<Font> {
             align_y: alignment::Vertical::Top,
             shaping: Shaping::default(),
             wrapping: Wrapping::default(),
+            ellipsis: text::Ellipsis::default(),
         }
     }
 }
@@ -326,6 +334,7 @@ where
             align_y: format.align_y,
             shaping: format.shaping,
             wrapping: format.wrapping,
+            ellipsis: format.ellipsis,
         });
 
         paragraph.min_bounds()

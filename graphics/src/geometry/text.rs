@@ -1,6 +1,6 @@
 use crate::core;
 use crate::core::alignment;
-use crate::core::text::{Alignment, LineHeight, Paragraph, Shaping, Wrapping};
+use crate::core::text::{Alignment, Ellipsis, LineHeight, Paragraph, Shaping, Wrapping};
 use crate::core::{Color, Font, Pixels, Point, Size, Vector};
 use crate::geometry::Path;
 use crate::text;
@@ -56,6 +56,7 @@ impl Text {
             align_y: self.align_y,
             shaping: self.shaping,
             wrapping: Wrapping::default(),
+            ellipsis: Ellipsis::default(),
         });
 
         let translation_x = match self.align_x {

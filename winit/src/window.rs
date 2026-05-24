@@ -400,6 +400,7 @@ where
                 align_y: alignment::Vertical::Top,
                 shaping: text::Shaping::Advanced,
                 wrapping: text::Wrapping::None,
+                ellipsis: text::Ellipsis::default(),
             });
 
             self.spans.clear();

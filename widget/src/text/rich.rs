@@ -4,7 +4,7 @@ use crate::core::mouse;
 use crate::core::renderer;
 use crate::core::text::{Paragraph, Span};
 use crate::core::widget::text::{
-    self, Alignment, Catalog, LineHeight, Shaping, Style, StyleFn, Wrapping,
+    self, Alignment, Catalog, Ellipsis, LineHeight, Shaping, Style, StyleFn, Wrapping,
 };
 use crate::core::widget::tree::{self, Tree};
 use crate::core::{
@@ -497,6 +497,7 @@ where
             align_y,
             shaping: Shaping::Advanced,
             wrapping,
+            ellipsis: Ellipsis::default(),
         };
 
         if state.spans != spans {
@@ -514,6 +515,7 @@ where
                 align_y,
                 shaping: Shaping::Advanced,
                 wrapping,
+                ellipsis: Ellipsis::default(),
             }) {
                 core::text::Difference::None => {}
                 core::text::Difference::Bounds => {
