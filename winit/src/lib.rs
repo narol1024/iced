@@ -313,6 +313,8 @@ where
                                 #[cfg(target_os = "macos")]
                                 let corner_radius =
                                     settings.platform_specific.corner_radius;
+                                #[cfg(target_os = "macos")]
+                                let decorations = settings.decorations;
 
                                 #[cfg(target_arch = "wasm32")]
                                 let target =
@@ -396,8 +398,56 @@ where
                                                 if let Some(ns_window) =
                                                     ns_window
                                                 {
-                                                    // setCornerRadius: is only available on macOS 15+.
-                                                    // Check respondsToSelector before calling.
+                                                    // setCornerRadius: on NSWindow is only available
+                                                    // on macOS 15+. Even when available, it
+                                                    // doesn't work for borderless windows
+                                                    // (decorations: false). We therefore always
+                                                    // set cornerRadius on the content view's
+                                                    // backing CALayer, which works on all macOS
+                                                    // versions and window styles.
+                                                    //
+                                                    // For borderless windows we also need to
+                                                    // make the window non-opaque with a clear
+                                                    // background so the rounded corners are
+                                                    // actually visible.
+                                                    unsafe {
+                                                        use objc2::runtime::Object;
+                                                        let content_view: *mut Object =
+                                                            msg_send![&ns_window, contentView];
+                                                        if !content_view.is_null() {
+                                                            let _: () = msg_send![
+                                                                content_view,
+                                                                setWantsLayer: true
+                                                            ];
+                                                            let layer: *mut Object =
+                                                                msg_send![content_view, layer];
+                                                            if !layer.is_null() {
+                                                                let _: () = msg_send![
+                                                                    layer,
+                                                                    setCornerRadius: corner_radius as f64
+                                                                ];
+                                                                let _: () = msg_send![
+                                                                    layer,
+                                                                    setMasksToBounds: true
+                                                                ];
+                                                            }
+                                                        }
+                                                        if !decorations {
+                                                            let _: () = msg_send![
+                                                                &ns_window,
+                                                                setOpaque: false
+                                                            ];
+                                                            let clear_color =
+                                                                objc2_app_kit::NSColor::clearColor();
+                                                            let _: () = msg_send![
+                                                                &ns_window,
+                                                                setBackgroundColor: &*clear_color
+                                                            ];
+                                                        }
+                                                    }
+                                                    // Also try NSWindow.setCornerRadius: when
+                                                    // available, so decorated windows can benefit
+                                                    // from the native implementation.
                                                     let responds: bool = unsafe {
                                                         msg_send![
                                                             &ns_window,
