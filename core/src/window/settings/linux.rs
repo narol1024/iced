@@ -1,7 +1,7 @@
 //! Platform specific settings for Linux.
 
 /// The platform specific window settings of an application.
-#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[derive(Debug, Clone, PartialEq, Default)]
 pub struct PlatformSpecific {
     /// Sets the application id of the window.
     ///
@@ -14,4 +14,8 @@ pub struct PlatformSpecific {
     /// This flag is particularly useful for creating UI elements that need precise
     /// positioning and immediate display without window manager interference.
     pub override_redirect: bool,
+
+    /// The corner radius of the window in logical pixels.
+    /// If set, applies rounded corners to the window.
+    pub corner_radius: Option<f32>,
 }
