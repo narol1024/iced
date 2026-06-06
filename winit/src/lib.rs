@@ -310,6 +310,10 @@ where
 
                                 let visible = settings.visible;
 
+                                #[cfg(target_os = "macos")]
+                                let corner_radius =
+                                    settings.platform_specific.corner_radius;
+
                                 #[cfg(target_arch = "wasm32")]
                                 let target =
                                     settings.platform_specific.target.clone();
@@ -353,6 +357,54 @@ where
                                 #[cfg(target_os = "macos")]
                                 if let Some(position) = position {
                                     window.set_outer_position(position);
+                                }
+
+                                #[cfg(target_os = "macos")]
+                                if let Some(corner_radius) = corner_radius
+                                {
+                                    use crate::runtime::window::raw_window_handle::{
+                                        HasWindowHandle, RawWindowHandle,
+                                    };
+
+                                    if let Ok(handle) = window.window_handle()
+                                    {
+                                        if let RawWindowHandle::AppKit(handle) =
+                                            handle.as_raw()
+                                        {
+                                            use objc2::msg_send;
+                                            use objc2_app_kit::NSView;
+                                            use objc2_foundation::is_main_thread;
+
+                                            assert!(
+                                                is_main_thread(),
+                                                "must be on main thread to set corner radius"
+                                            );
+
+                                            // SAFETY: The NSView pointer comes from
+                                            // the raw window handle, which ensures
+                                            // it's a valid pointer to an NSView.
+                                            let ns_view_ptr: *mut NSView =
+                                                handle.ns_view.as_ptr().cast();
+                                            let ns_view = unsafe {
+                                                objc2::rc::Id::retain(ns_view_ptr)
+                                            };
+
+                                            if let Some(ns_view) = ns_view {
+                                                let ns_window =
+                                                    ns_view.window();
+                                                if let Some(ns_window) =
+                                                    ns_window
+                                                {
+                                                    unsafe {
+                                                        let _: () = msg_send![
+                                                            &ns_window,
+                                                            setCornerRadius: corner_radius as f64
+                                                        ];
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
 
                                 #[cfg(target_arch = "wasm32")]

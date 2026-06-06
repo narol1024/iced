@@ -1,7 +1,7 @@
 //! Platform specific settings for macOS.
 
 /// The platform specific window settings of an application.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Default)]
 pub struct PlatformSpecific {
     /// Hides the window title.
     pub title_hidden: bool,
@@ -9,4 +9,7 @@ pub struct PlatformSpecific {
     pub titlebar_transparent: bool,
     /// Makes the window content appear behind the titlebar.
     pub fullsize_content_view: bool,
+    /// The corner radius of the window in logical pixels.
+    /// If set, applies rounded corners to the window.
+    pub corner_radius: Option<f32>,
 }
