@@ -372,6 +372,7 @@ where
                                             handle.as_raw()
                                         {
                                             use objc2::msg_send;
+                                            use objc2::sel;
                                             use objc2_app_kit::NSView;
                                             use objc2_foundation::is_main_thread;
 
@@ -395,11 +396,21 @@ where
                                                 if let Some(ns_window) =
                                                     ns_window
                                                 {
-                                                    unsafe {
-                                                        let _: () = msg_send![
+                                                    // setCornerRadius: is only available on macOS 15+.
+                                                    // Check respondsToSelector before calling.
+                                                    let responds: bool = unsafe {
+                                                        msg_send![
                                                             &ns_window,
-                                                            setCornerRadius: corner_radius as f64
-                                                        ];
+                                                            respondsToSelector: objc2::sel!(setCornerRadius:)
+                                                        ]
+                                                    };
+                                                    if responds {
+                                                        unsafe {
+                                                            let _: () = msg_send![
+                                                                &ns_window,
+                                                                setCornerRadius: corner_radius as f64
+                                                            ];
+                                                        }
                                                     }
                                                 }
                                             }
